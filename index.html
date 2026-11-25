@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OLYMPUS LEGACY — Attendance</title>
+<style>
+:root{--bg:#080d18;--panel:#111a2b;--panel2:#17243a;--line:#263650;--text:#edf3ff;--muted:#9aaac2;--accent:#8b7cff;--green:#35c98a;--yellow:#f4bd54;--red:#ff6e7d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#1b2450 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:28px 18px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:12px}.mark{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#8b7cff,#4c65c9);display:grid;place-items:center;font-weight:900;font-size:20px;box-shadow:0 8px 30px #6556dc55}.eyebrow{font-size:11px;letter-spacing:2px;color:#b8b1ff;font-weight:800}.brand h1{font-size:19px;letter-spacing:1.4px;margin:1px 0}.sub{color:var(--muted);font-size:13px}.pill{border:1px solid #315747;background:#10291f;color:#7be2b1;border-radius:30px;padding:7px 11px;font-size:12px}
+.hero{padding:28px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(120deg,#17233b,#111a2b 65%);margin-bottom:18px}.hero h2{font-size:clamp(25px,5vw,38px);line-height:1.12;margin:8px 0}.hero p{color:var(--muted);margin:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat,.card{background:#101a2b;border:1px solid var(--line);border-radius:17px;padding:17px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:4px}.layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card h3{margin:0 0 14px;font-size:17px}.field{margin:12px 0}.field label{display:block;color:#c8d3e7;font-size:13px;margin-bottom:6px}input,select,textarea{width:100%;background:#0a1220;color:var(--text);border:1px solid #30415e;border-radius:11px;padding:12px 13px;font:inherit;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--accent)}textarea{min-height:82px;resize:vertical}.btn{border:0;border-radius:11px;padding:12px 16px;background:linear-gradient(100deg,#8b7cff,#6577e8);color:white;font-weight:800;font-size:14px;cursor:pointer;width:100%;margin-top:7px}.btn.secondary{background:#1c2a42;border:1px solid #344866;color:#dce6fa}.note{color:var(--muted);font-size:12px;margin-top:10px}.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{padding:9px 13px;border:1px solid var(--line);background:#111a2b;color:#c7d3e8;border-radius:10px;cursor:pointer}.tab.active{background:#29264e;border-color:#7469da;color:white}.hidden{display:none}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid #263650;white-space:nowrap}th{color:#aab8ce;font-weight:700}.status{display:inline-block;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:800}.hadir{background:#123829;color:#79e0b0}.izin,.sakit{background:#3a2d16;color:#ffd27c}.alpa{background:#401f2a;color:#ff9aa5}.empty{color:var(--muted);padding:18px;text-align:center}.footer{text-align:center;color:#72819a;font-size:12px;margin-top:25px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:22px}.hero{padding:22px}.top{align-items:flex-start}.pill{white-space:nowrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="mark">OL</div><div><div class="eyebrow">CLUB THALORIA</div><h1>OLYMPUS LEGACY</h1><div class="sub">Member attendance portal</div></div></div>
+ <div class="pill">● DEMO MODE</div>
+</header>
+<section class="hero">
+ <div class="eyebrow">WELCOME, MEMBERS</div>
+ <h2>One legacy.<br>One community.</h2>
+ <p>Portal absensi harian anggota Olympus Legacy.</p>
+</section>
+<section class="stats">
+ <div class="stat"><small>Total catatan</small><strong id="total">0</strong></div>
+ <div class="stat"><small>Hadir hari ini</small><strong id="present">0</strong></div>
+ <div class="stat"><small>Izin / sakit</small><strong id="excused">0</strong></div>
+</section>
+<div class="tabs">
+ <button class="tab active" id="memberTab" onclick="showTab('member')">Absensi anggota</button>
+ <button class="tab" id="adminTab" onclick="showTab('admin')">Rekap admin</button>
+</div>
+<section class="layout" id="memberView">
+ <div class="card">
+  <h3>📝 Isi absensi</h3>
+  <form id="attendanceForm">
+   <div class="field"><label for="username">Username anggota</label><input id="username" maxlength="30" placeholder="@username_kamu" required></div>
+   <div class="field"><label for="date">Tanggal</label><input id="date" type="date" required></div>
+   <div class="field"><label for="status">Status kehadiran</label><select id="status"><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Sakit">Sakit</option><option value="Alpa">Tidak hadir</option></select></div>
+   <div class="field"><label for="reason">Keterangan (opsional)</label><textarea id="reason" maxlength="240" placeholder="Tulis keterangan jika ada..."></textarea></div>
+   <button class="btn" type="submit">Kirim absensi</button>
+  </form>
+  <p class="note">Isi username dengan benar. Untuk demo ini, satu username hanya dapat memiliki satu catatan per tanggal; kiriman baru akan memperbarui catatan sebelumnya.</p>
+ </div>
+ <div class="card">
+  <h3>📌 Panduan anggota</h3>
+  <p class="sub">1. Masukkan username yang biasa kamu gunakan di club.</p>
+  <p class="sub">2. Pilih tanggal absensi.</p>
+  <p class="sub">3. Pilih status kehadiran.</p>
+  <p class="sub">4. Tambahkan keterangan bila diperlukan.</p>
+  <p class="sub">5. Tekan tombol <b>Kirim absensi</b>.</p>
+  <div style="border-top:1px solid #263650;margin-top:17px;padding-top:14px">
+   <div class="eyebrow">REMINDER</div><p class="sub">Mohon isi absensi dengan jujur dan tepat waktu. Terima kasih sudah menjaga kebersamaan Olympus Legacy.</p>
+  </div>
+ </div>
+</section>
+<section id="adminView" class="card hidden">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+  <h3 style="margin:0">📊 Rekap absensi</h3>
+  <button class="btn secondary" style="width:auto;margin:0" onclick="downloadCSV()">Unduh CSV</button>
+ </div>
+ <div class="field"><label for="filterDate">Filter tanggal</label><input id="filterDate" type="date" onchange="render()"></div>
+ <div class="tablewrap"><table><thead><tr><th>Tanggal</th><th>Username</th><th>Status</th><th>Keterangan</th></tr></thead><tbody id="rows"></tbody></table></div>
+ <p class="note">Demo ini belum memakai login atau database online. Jangan gunakan data pribadi sensitif.</p>
+</section>
+<div class="footer">OLYMPUS LEGACY · CLUB THALORIA · ATTENDANCE PORTAL</div>
+</div>
+<script>
+const KEY='olympus_legacy_attendance_demo';
+const $=id=>document.getElementById(id);
+const today=new Date(); const localDate=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+$('date').value=localDate; $('filterDate').value=localDate;
+function getData(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function saveData(data){localStorage.setItem(KEY,JSON.stringify(data))}
+function render(){
+ const data=getData(), selected=$('filterDate').value;
+ $('total').textContent=data.length;
+ $('present').textContent=data.filter(x=>x.date===localDate&&x.status==='Hadir').length;
+ $('excused').textContent=data.filter(x=>x.date===localDate&&(x.status==='Izin'||x.status==='Sakit')).length;
+ const filtered=data.filter(x=>!selected||x.date===selected).sort((a,b)=>b.date.localeCompare(a.date)||a.username.localeCompare(b.username));
+ $('rows').innerHTML=filtered.length?filtered.map(x=>`<tr><td>${escapeHTML(x.date)}</td><td>${escapeHTML(x.username)}</td><td><span class="status ${x.status.toLowerCase()}">${escapeHTML(x.status)}</span></td><td>${escapeHTML(x.reason||'—')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Belum ada catatan absensi.</td></tr>';
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+$('attendanceForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const username=$('username').value.trim().replace(/^@/,'');
+ if(!username){alert('Username wajib diisi.');return}
+ const entry={username:'@'+username,date:$('date').value,status:$('status').value,reason:$('reason').value.trim()};
+ const data=getData(); const index=data.findIndex(x=>x.username.toLowerCase()===entry.username.toLowerCase()&&x.date===entry.date);
+ if(index>=0)data[index]=entry;else data.push(entry);
+ saveData(data); $('reason').value=''; render(); alert('Absensi tersimpan di perangkat ini (mode demo).');
+});
+function showTab(tab){
+ const member=tab==='member';$('memberView').classList.toggle('hidden',!member);$('adminView').classList.toggle('hidden',member);
+ $('memberTab').classList.toggle('active',member);$('adminTab').classList.toggle('active',!member);
+ render();
+}
+function downloadCSV(){
+ const data=getData(); if(!data.length){alert('Belum ada data untuk diunduh.');return}
+ const rows=[['Tanggal','Username','Status','Keterangan'],...data.map(x=>[x.date,x.username,x.status,x.reason])];
+ const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download='rekap-olympus-legacy.csv';a.click();URL.revokeObjectURL(url);
+}
+render();
+</script>
+</body>
+  </html>
